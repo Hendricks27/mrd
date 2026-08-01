@@ -1,0 +1,254 @@
+:root {
+  --bg-primary: #000000; /* pure black = transparent on additive display */
+  --bg-secondary: #0a0a0f;
+  --bg-tertiary: #14141f;
+  --bg-card: #1a1a2e;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b0;
+  --accent-primary: #00d4ff;
+  --focus-ring: #00d4ff;
+  --focus-glow: rgba(0, 212, 255, 0.4);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  width: 600px;
+  height: 600px;
+  overflow: hidden;
+}
+
+#app { width: 100%; height: 100%; position: relative; }
+
+/* --- Screens --- */
+.screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 8px; /* safe margin */
+}
+.screen.hidden { display: none; }
+
+/* --- Header --- */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  gap: 12px;
+  flex-shrink: 0;
+}
+.header h1 { font-size: 22px; font-weight: 600; flex: 1; }
+.header-meta { font-size: 13px; color: var(--text-secondary); }
+.back-btn {
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 22px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+}
+
+/* --- Content --- */
+.content {
+  flex: 1;
+  padding: 10px 4px 4px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* --- Focus states (critical for EMG/D-pad) --- */
+.focusable {
+  transition: all 0.15s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+  min-height: 44px;
+}
+.focusable:focus {
+  outline: none;
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 20px var(--focus-glow);
+}
+
+/* --- Cards / stats --- */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+.stats-card {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 16px;
+}
+.stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+.stat-label { font-size: 12px; color: var(--text-secondary); }
+
+/* --- Scrollable content frame with edge scrims (home) --- */
+.content-frame {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.content-frame .content { height: 100%; }
+.content-frame::before,
+.content-frame::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 32px;
+  pointer-events: none;
+  z-index: 5;
+}
+.content-frame::before { top: 0; background: linear-gradient(to bottom, #000, transparent); }
+.content-frame::after { bottom: 0; background: linear-gradient(to top, #000, transparent); }
+
+/* --- Speech list --- */
+.speech-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.menu-title { display: block; }
+.menu-meta {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* --- Home menu --- */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 18px;
+  min-height: 88px; /* platform-mandated tap-target height */
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 17px;
+  font-weight: 500;
+  text-align: left;
+}
+.menu-item:focus { background: var(--bg-card); }
+.menu-icon { font-size: 20px; width: 26px; text-align: center; }
+.menu-label { flex: 1; }
+.hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 0 8px;
+}
+
+/* --- Prompter --- */
+#prompter { padding: 8px; gap: 6px; }
+.progress-track {
+  height: 5px;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-primary);
+  border-radius: 3px;
+  transition: width 0.25s ease;
+}
+.prompter-frame {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.prompter-viewport {
+  height: 100%;
+  overflow: hidden; /* no scrollbar; scrolled programmatically */
+  /* NOTE: no CSS scroll-behavior here — position restores must be instant;
+     user-initiated steps request smooth explicitly in app.js */
+}
+/* Edge scrims (required on scrolling containers). Gradient to pure black
+   = fade to transparent on the additive display. */
+.prompter-frame::before,
+.prompter-frame::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 48px;
+  pointer-events: none;
+  z-index: 5;
+}
+.prompter-frame::before { top: 0; background: linear-gradient(to bottom, #000, transparent); }
+.prompter-frame::after { bottom: 0; background: linear-gradient(to top, #000, transparent); }
+.prompter-text {
+  padding: 6px 10px 520px; /* deep bottom pad lets the last line reach the top */
+  color: var(--text-primary);
+  /* font-size / line-height / weight set from settings by app.js */
+}
+.prompter-text p { margin-bottom: 0.8em; }
+
+/* --- Settings rows --- */
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  min-height: 88px; /* platform-mandated tap-target height */
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 16px;
+  text-align: left;
+}
+.setting-row:focus { background: var(--bg-card); }
+.setting-label { flex: 1; font-weight: 500; }
+.setting-value {
+  color: var(--accent-primary);
+  font-weight: 700;
+  font-size: 16px;
+  min-width: 96px;
+  text-align: right;
+}
+
+/* --- Toast --- */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-90px);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 10px 22px;
+  border-radius: 24px; /* platform toast spec */
+  font-size: 15px;
+  border: 1px solid var(--accent-primary);
+  transition: transform 0.3s ease;
+  z-index: 100;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.visible { transform: translateX(-50%) translateY(0); }
+
+.hidden { display: none !important; }

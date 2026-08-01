@@ -1,0 +1,29 @@
+# Welcome demo
+
+Welcome, everyone, and thank you for being here today.
+
+This is your teleprompter speaking. You are now looking at one of several speeches in this file. To add your own, open teleprompter/speech.txt on your Mac and start a new line with a hash and a space, followed by a title — like "# My keynote". Everything under that line, until the next title, is one speech.
+
+Swipe down on the Neural Band to advance, swipe up to go back. Each swipe moves by the step you chose in Settings: one row, three rows, or a full page. If the text feels small mid-speech, swipe right to enlarge it; swipe left to shrink it. Your reading position holds steady while the text reflows.
+
+Each speech remembers its own position, so you can rehearse two talks in parallel and each one resumes exactly where you left it. Editing one speech on your Mac only resets that speech — the others keep their place.
+
+When you finish, pinch your middle finger to step back. Good luck out there.
+
+# Toast example
+
+Good evening, everyone. For those who don't know me, I promised I would keep this short, and unlike the groom, I intend to keep my promises.
+
+I have known this couple long enough to say with confidence that they are perfect for each other. One of them can't make a decision without a spreadsheet, and the other has never once read the terms and conditions. Together, they average out to one fully functional adult.
+
+But truly: watching the two of you build a life together has been one of the great joys of my life. You make each other kinder, braver, and much better at parallel parking.
+
+So please raise your glasses. To the happy couple — may your love be modern enough to survive the times, and old-fashioned enough to last forever. Cheers!
+
+# 30-second self intro
+
+Hi, I'm Wenjin. I build things at the intersection of software and whatever new hardware just shipped.
+
+Most recently I've been writing apps for smart glasses — including the teleprompter I am literally reading this from right now.
+
+I care about tools that feel invisible: fast to edit, instant to test, and no ceremony between an idea and seeing it work. If that sounds like your kind of thing, come find me afterward — I'd love to compare notes.

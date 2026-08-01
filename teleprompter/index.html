@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Personal teleprompter for Meta Ray-Ban Display — multiple speeches, Neural Band scrolling, adjustable text size and scroll step.">
+  <meta name="mrbd-web-app-capable" content="yes">
+  <title>Prompter</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============ HOME: speech picker ============ -->
+    <div id="home" class="screen">
+      <header class="header">
+        <h1>&#127908; Prompter</h1>
+        <span class="header-meta" id="script-status">Loading&hellip;</span>
+      </header>
+      <div class="content-frame">
+        <div class="content">
+          <div id="speech-list" class="speech-list"></div>
+          <button class="menu-item focusable" data-action="go-settings">
+            <span class="menu-icon">&#9881;</span>
+            <span class="menu-label"><span class="menu-title">Settings</span></span>
+          </button>
+          <button class="menu-item focusable" data-action="reload-script">
+            <span class="menu-icon">&#8635;</span>
+            <span class="menu-label"><span class="menu-title">Reload script</span></span>
+          </button>
+          <p class="hint">Edit <b>teleprompter/speech.txt</b> &mdash; start each speech with a "# Title" line.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SPEECH DETAIL ============ -->
+    <div id="speech" class="screen hidden">
+      <header class="header">
+        <button class="back-btn focusable" data-action="back">&#8592;</button>
+        <h1 id="speech-title">Speech</h1>
+      </header>
+      <div class="content">
+        <div class="card stats-card">
+          <div class="stat">
+            <span class="stat-value" id="stat-words">&ndash;</span>
+            <span class="stat-label">words</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-minutes">&ndash;</span>
+            <span class="stat-label">est. minutes</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-progress">0%</span>
+            <span class="stat-label">position</span>
+          </div>
+        </div>
+        <button class="menu-item focusable initial-focus" data-action="start">
+          <span class="menu-icon">&#9654;</span>
+          <span class="menu-label"><span class="menu-title" id="start-label">Start prompting</span></span>
+        </button>
+        <button class="menu-item focusable" data-action="restart">
+          <span class="menu-icon">&#9198;</span>
+          <span class="menu-label"><span class="menu-title">Restart from top</span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ PROMPTER ============ -->
+    <div id="prompter" class="screen hidden">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="prompter-frame">
+        <div class="prompter-viewport" id="prompter-viewport">
+          <div class="prompter-text" id="prompter-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SETTINGS ============ -->
+    <div id="settings" class="screen hidden">
+      <header class="header">
+        <button class="back-btn focusable" data-action="back">&#8592;</button>
+        <h1>Settings</h1>
+        <span class="header-meta">&#8596; to change</span>
+      </header>
+      <div class="content" id="settings-list">
+        <!-- setting rows injected by app.js -->
+      </div>
+    </div>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

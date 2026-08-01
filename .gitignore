@@ -1,0 +1,8 @@
+.DS_Store
+
+# Vendored clone of facebook/meta-wearables-dat-ios (re-clone as needed; see ios/README.md)
+ios-sdk/
+
+# Xcode
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
