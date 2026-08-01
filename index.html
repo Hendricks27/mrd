@@ -2,97 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
-  <meta name="description" content="Hello World for Meta Ray-Ban Display — live clock, canvas rendering demo, and D-pad navigation starter.">
-  <meta name="mrbd-web-app-capable" content="yes">
-  <title>Hello Display</title>
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mrd — Ray-Ban Display apps</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           background: #0a0a0f; color: #fff; display: flex; flex-direction: column;
+           align-items: center; justify-content: center; min-height: 100vh; margin: 0; gap: 16px; }
+    a { display: block; width: min(420px, 85vw); padding: 20px 24px; background: #1a1a2e;
+        border-radius: 12px; color: #fff; text-decoration: none; font-size: 18px; font-weight: 600; }
+    a small { display: block; color: #a0a0b0; font-weight: 400; font-size: 14px; margin-top: 4px; }
+    a:hover { background: #23233d; }
+    p { color: #606070; font-size: 13px; }
+  </style>
 </head>
 <body>
-  <div id="app">
-
-    <!-- ============ HOME ============ -->
-    <div id="home" class="screen">
-      <header class="header">
-        <h1>&#128083; Hello Display</h1>
-        <span class="header-meta" id="status-indicator">Ready</span>
-      </header>
-      <div class="content">
-        <div class="hero card">
-          <div class="hero-title">Hello, World &#128075;</div>
-          <div class="hero-clock" id="clock">--:--:--</div>
-          <div class="card-subtitle">Rendered live on your Ray-Ban Display</div>
-        </div>
-        <div class="card stat-card">
-          <span class="card-subtitle">Waves sent</span>
-          <span class="card-value" id="wave-count">0</span>
-        </div>
-      </div>
-      <nav class="nav-bar">
-        <button class="nav-item primary focusable" data-action="wave">&#128075; Wave</button>
-        <button class="nav-item focusable" data-action="go-render">&#127912; Render</button>
-        <button class="nav-item focusable" data-action="go-about">&#8505;&#65039; About</button>
-      </nav>
-    </div>
-
-    <!-- ============ CANVAS RENDER DEMO ============ -->
-    <div id="render" class="screen hidden">
-      <header class="header">
-        <button class="back-btn focusable" data-action="back">&#8592;</button>
-        <h1>Canvas Render</h1>
-        <span class="header-meta" id="fps-indicator"></span>
-      </header>
-      <div class="content canvas-wrap">
-        <canvas id="demo-canvas" width="560" height="420"></canvas>
-      </div>
-      <nav class="nav-bar">
-        <button class="nav-item focusable" data-action="toggle-anim" id="anim-toggle">&#9208; Pause</button>
-      </nav>
-    </div>
-
-    <!-- ============ ABOUT ============ -->
-    <div id="about" class="screen hidden">
-      <header class="header">
-        <button class="back-btn focusable" data-action="back">&#8592;</button>
-        <h1>About this display</h1>
-      </header>
-      <div class="content">
-        <div class="list-container">
-          <div class="list-item focusable" tabindex="0">
-            <span class="list-item-icon">&#128441;</span>
-            <div class="list-item-content">
-              <div class="list-item-title">600 &times; 600 viewport</div>
-              <div class="list-item-meta">Monocular, right lens, ~20&deg; FOV</div>
-            </div>
-          </div>
-          <div class="list-item focusable" tabindex="0">
-            <span class="list-item-icon">&#9899;</span>
-            <div class="list-item-content">
-              <div class="list-item-title">Black = transparent</div>
-              <div class="list-item-meta">Additive waveguide &mdash; #000 emits no light</div>
-            </div>
-          </div>
-          <div class="list-item focusable" tabindex="0">
-            <span class="list-item-icon">&#129508;</span>
-            <div class="list-item-content">
-              <div class="list-item-title">Neural Band input</div>
-              <div class="list-item-meta">Swipes &rarr; D-pad &middot; index pinch = Enter &middot; middle pinch = Back</div>
-            </div>
-          </div>
-          <div class="list-item focusable" tabindex="0">
-            <span class="list-item-icon">&#9889;</span>
-            <div class="list-item-content">
-              <div class="list-item-title">Plain HTML/CSS/JS</div>
-              <div class="list-item-meta">No framework &mdash; this whole app is 3 small files</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <script src="app.js"></script>
+  <h1>👓 mrd</h1>
+  <a href="teleprompter/">🎤 Prompter<small>Multi-speech teleprompter for Meta Ray-Ban Display</small></a>
+  <a href="helloworld/">👋 Hello Display<small>Starter app — clock, canvas demo, D-pad navigation</small></a>
+  <p><a href="https://github.com/Hendricks27/mrd" style="all:unset; text-decoration:underline; cursor:pointer;">github.com/Hendricks27/mrd</a></p>
 </body>
 </html>

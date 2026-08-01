@@ -1,10 +1,11 @@
 # mrd — Meta Ray-Ban Display web apps
 
-Two apps, both served from this directory (hello world at `/`, teleprompter at
-`/teleprompter/`):
+Two apps, both served from this directory (hello world at `/helloworld/`,
+teleprompter at `/teleprompter/`, and a landing page at `/`):
 
-- **Hello Display** (root) — starter app: live clock, Canvas 2D animation demo,
-  D-pad/Neural Band navigation, toast, localStorage persistence.
+- **Hello Display** ([helloworld/](helloworld/)) — starter app: live clock,
+  Canvas 2D animation demo, D-pad/Neural Band navigation, toast, localStorage
+  persistence.
 - **Prompter** ([teleprompter/](teleprompter/)) — personal teleprompter with a
   speech library. `teleprompter/speech.txt` holds all your speeches: start each
   one with a `# Title` line (blank line = paragraph break; a file with no `#`
@@ -24,7 +25,8 @@ Plain HTML/CSS/JS — no framework, no build step.
 ### GitHub Pages (stable, always on — the default)
 
 This repo deploys to **https://hendricks27.github.io/mrd/** via GitHub Pages
-(hello world at `/`, teleprompter at `/teleprompter/`). The Mac can be off;
+(landing page at `/`, hello world at `/helloworld/`, teleprompter at
+`/teleprompter/`). The Mac can be off;
 the glasses fetch from GitHub's CDN. Install on glasses by QR
 (`qr-install.png` in each app folder encodes the
 `fb-viewapp://web_app_deep_link?...` deep link) or manually via Meta AI app →
