@@ -4,7 +4,7 @@
   // ==================== CONFIG ====================
   var CONFIG = {
     storageKey: 'mrd_prompter',
-    scriptUrl: 'speech.txt',
+    speechesDir: 'speeches/', // one .txt file per speech
     wordsPerMinute: 140,
   };
 
@@ -27,9 +27,9 @@
     renderedKey: null,   // which speech the prompter DOM currently holds
     data: {
       settings: { fontSize: 32, scrollStep: 'rows3', lineHeight: 1.5, bold: true, invert: 'natural' },
-      speechData: {},     // key -> { progress: 0..1, hash } — position per speech
+      speechData: {},     // filename -> { progress: 0..1, hash } — position per speech
       activeKey: null,    // last opened speech, restored on relaunch
-      cachedScript: '',   // last successfully fetched file (offline fallback)
+      cachedSpeeches: [], // [{file, text}] last successful fetch (offline fallback)
     },
   };
 
@@ -131,7 +131,7 @@
         Object.assign(state.data.settings, parsed.settings || {});
         state.data.speechData = parsed.speechData || {};
         state.data.activeKey = parsed.activeKey || null;
-        state.data.cachedScript = parsed.cachedScript || '';
+        state.data.cachedSpeeches = parsed.cachedSpeeches || [];
       }
     } catch (e) {
       console.error('[Storage] Load error:', e);
@@ -162,43 +162,35 @@
     return (s.trim().match(/\S+/g) || []).length;
   }
 
-  // Split the file into speeches on "# Title" lines. A file with no headers
-  // is a single untitled speech (the original single-script behavior).
-  function parseSpeeches(text) {
+  function prettifyFilename(file) {
+    return file.replace(/\.txt$/i, '').replace(/[-_]+/g, ' ').trim();
+  }
+
+  // One file = one speech. Title comes from a "# Title" first line when
+  // present, otherwise from the filename.
+  function parseSpeechFile(file, text) {
     var lines = text.replace(/\r\n?/g, '\n').split('\n');
-    var speeches = [];
-    var current = null;
-    var preamble = [];
-
-    lines.forEach(function(line) {
-      var m = line.match(/^#\s+(.+?)\s*$/);
-      if (m) {
-        current = { title: m[1], lines: [] };
-        speeches.push(current);
-      } else if (current) {
-        current.lines.push(line);
-      } else {
-        preamble.push(line);
-      }
-    });
-
-    var pre = preamble.join('\n').trim();
-    if (speeches.length === 0) {
-      if (!pre) return [];
-      speeches = [{ title: 'My speech', lines: preamble }];
-    } else if (pre) {
-      speeches.unshift({ title: 'Untitled', lines: preamble });
+    var title = null;
+    var bodyStart = 0;
+    for (var i = 0; i < lines.length; i++) {
+      if (!lines[i].trim()) continue;
+      var m = lines[i].match(/^#\s+(.+?)\s*$/);
+      if (m) { title = m[1]; bodyStart = i + 1; }
+      break;
     }
+    var body = lines.slice(bodyStart).join('\n').trim();
+    return {
+      key: file,
+      title: title || prettifyFilename(file),
+      body: body,
+      hash: hashString(body),
+      words: countWords(body),
+    };
+  }
 
-    var seen = {};
-    return speeches
-      .map(function(s) {
-        var body = s.lines.join('\n').trim();
-        var key = s.title;
-        if (seen[key] !== undefined) { seen[key]++; key = s.title + ' (' + seen[key] + ')'; }
-        else seen[key] = 1;
-        return { key: key, title: s.title, body: body, hash: hashString(body), words: countWords(body) };
-      })
+  function speechesFromFetched(fetched) {
+    return fetched
+      .map(function(r) { return parseSpeechFile(r.file, r.text); })
       .filter(function(s) { return s.body.length > 0; });
   }
 
@@ -240,34 +232,81 @@
     if (sd) sd.progress = ratio;
   }
 
-  // ==================== SCRIPT LOADING ====================
-  function loadScript(isReload) {
-    var status = document.getElementById('script-status');
-    if (status) status.textContent = 'Loading…';
-
-    return fetch(CONFIG.scriptUrl + '?t=' + Date.now(), { cache: 'no-store' })
+  // ==================== SPEECH LOADING ====================
+  // Find the .txt files in speeches/. On GitHub Pages, Jekyll generates
+  // speeches/index.json at deploy time. On a plain local server (python
+  // http.server) that file is served as the raw Liquid template — JSON.parse
+  // fails — so fall back to scraping the server's directory listing.
+  function discoverSpeechFiles() {
+    return fetch(CONFIG.speechesDir + 'index.json?t=' + Date.now(), { cache: 'no-store' })
       .then(function(res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.text();
       })
       .then(function(text) {
-        var fileChanged = text !== state.data.cachedScript;
-        state.data.cachedScript = text;
-        state.speeches = parseSpeeches(text);
+        var list = JSON.parse(text);
+        if (!Array.isArray(list)) throw new Error('bad manifest');
+        return list;
+      })
+      .catch(function() {
+        return fetch(CONFIG.speechesDir + '?t=' + Date.now(), { cache: 'no-store' })
+          .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+          })
+          .then(function(html) {
+            var files = [];
+            var re = /href="([^"]+\.txt)"/gi;
+            var m;
+            while ((m = re.exec(html)) !== null) {
+              var name = decodeURIComponent(m[1].split('/').pop());
+              if (files.indexOf(name) === -1) files.push(name);
+            }
+            return files;
+          });
+      });
+  }
+
+  function loadSpeeches(isReload) {
+    var status = document.getElementById('script-status');
+    if (status) status.textContent = 'Loading…';
+
+    return discoverSpeechFiles()
+      .then(function(files) {
+        files.sort(function(a, b) { return a.localeCompare(b); });
+        return Promise.all(files.map(function(file) {
+          return fetch(CONFIG.speechesDir + encodeURIComponent(file) + '?t=' + Date.now(), { cache: 'no-store' })
+            .then(function(res) {
+              if (!res.ok) throw new Error('HTTP ' + res.status);
+              return res.text();
+            })
+            .then(function(text) { return { file: file, text: text }; })
+            .catch(function() { return null; }); // skip files that fail; the rest still load
+        }));
+      })
+      .then(function(results) {
+        var fetched = results.filter(Boolean);
+        if (fetched.length === 0 && results.length > 0) throw new Error('all speech fetches failed');
+        var fingerprint = function(arr) {
+          return arr.map(function(r) { return r.file + ':' + hashString(r.text); }).join('|');
+        };
+        var anythingChanged = fingerprint(fetched) !== fingerprint(state.data.cachedSpeeches);
+        state.data.cachedSpeeches = fetched;
+        state.speeches = speechesFromFetched(fetched);
         var editedCount = syncSpeechData();
         saveData();
         afterSpeechesLoaded();
         if (status) status.textContent = speechCountLabel();
         if (isReload) {
-          showToast(!fileChanged ? 'Script unchanged'
+          showToast(!anythingChanged ? 'No changes'
             : 'Reloaded ✓ ' + state.speeches.length + ' speech' + (state.speeches.length === 1 ? '' : 'es') +
               (editedCount ? ', ' + editedCount + ' updated' : ''));
         }
       })
       .catch(function(err) {
-        console.error('[Script] Fetch failed:', err);
-        if (state.data.cachedScript) {
-          state.speeches = parseSpeeches(state.data.cachedScript);
+        console.error('[Speeches] Load failed:', err);
+        if (state.data.cachedSpeeches.length) {
+          state.speeches = speechesFromFetched(state.data.cachedSpeeches);
           syncSpeechData();
           afterSpeechesLoaded();
           if (status) status.textContent = 'Offline copy';
@@ -275,7 +314,7 @@
         } else {
           state.speeches = [];
           afterSpeechesLoaded();
-          if (status) status.textContent = 'No script';
+          if (status) status.textContent = 'No speeches';
         }
       });
   }
@@ -561,7 +600,7 @@
         navigateTo('settings');
         break;
       case 'reload-script':
-        loadScript(true);
+        loadSpeeches(true);
         break;
       case 'cycle-setting':
         if (element && element.dataset.setting) cycleSetting(element.dataset.setting, 1);
@@ -672,7 +711,7 @@
     setupEvents();
     loadData();
     state.activeKey = state.data.activeKey; // restored fully once speeches load
-    loadScript(false);
+    loadSpeeches(false);
 
     setTimeout(function() {
       navigateTo('home', { addToHistory: false });

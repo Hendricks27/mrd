@@ -1,0 +1,7 @@
+# 30-second self intro
+
+Hi, I'm Wenjin. I build things at the intersection of software and whatever new hardware just shipped.
+
+Most recently I've been writing apps for smart glasses — including the teleprompter I am literally reading this from right now.
+
+I care about tools that feel invisible: fast to edit, instant to test, and no ceremony between an idea and seeing it work. If that sounds like your kind of thing, come find me afterward — I'd love to compare notes.

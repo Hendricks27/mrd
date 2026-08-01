@@ -1,0 +1,11 @@
+# Welcome demo
+
+Welcome, everyone, and thank you for being here today.
+
+This is your teleprompter speaking. You are now looking at one of several speeches in this file. To add your own, open teleprompter/speech.txt on your Mac and start a new line with a hash and a space, followed by a title — like "# My keynote". Everything under that line, until the next title, is one speech.
+
+Swipe down on the Neural Band to advance, swipe up to go back. Each swipe moves by the step you chose in Settings: one row, three rows, or a full page. If the text feels small mid-speech, swipe right to enlarge it; swipe left to shrink it. Your reading position holds steady while the text reflows.
+
+Each speech remembers its own position, so you can rehearse two talks in parallel and each one resumes exactly where you left it. Editing one speech on your Mac only resets that speech — the others keep their place.
+
+When you finish, pinch your middle finger to step back. Good luck out there.

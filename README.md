@@ -7,11 +7,16 @@ teleprompter at `/teleprompter/`, and a landing page at `/`):
   Canvas 2D animation demo, D-pad/Neural Band navigation, toast, localStorage
   persistence.
 - **Prompter** ([teleprompter/](teleprompter/)) — personal teleprompter with a
-  speech library. `teleprompter/speech.txt` holds all your speeches: start each
-  one with a `# Title` line (blank line = paragraph break; a file with no `#`
-  headers is treated as a single speech). The home screen lists them with word
-  count and estimated minutes; each speech remembers its own position, and
-  editing one speech on disk resets only that speech after Reload. In the
+  speech library. **Drop `.txt` files into
+  [teleprompter/speeches/](teleprompter/speeches/) — one file per speech.**
+  An optional `# Title` first line names it (otherwise the filename is used);
+  files sort alphabetically, so prefix `01-`, `02-`… to control order; blank
+  line = paragraph break. Discovery is automatic: on GitHub Pages a Jekyll
+  template ([speeches/index.json](teleprompter/speeches/index.json)) generates
+  the file list at deploy time, and on a local python server the app reads the
+  directory listing — no manifest to maintain either way. The home screen
+  lists speeches with word count and estimated minutes; each remembers its own
+  position, and editing one file resets only that speech after Reload. In the
   prompter: swipe down/up to scroll (1 row / 3 rows / full page per swipe,
   configurable), swipe right/left to resize text live without losing your
   place, progress bar, offline fallback to the last loaded file. Settings
@@ -32,10 +37,10 @@ the glasses fetch from GitHub's CDN. Install on glasses by QR
 `fb-viewapp://web_app_deep_link?...` deep link) or manually via Meta AI app →
 App connections → Web apps.
 
-To update a speech from anywhere: edit `teleprompter/speech.txt` on
-github.com (or the GitHub mobile app), commit, wait ~1 minute for Pages to
-redeploy, then pick **Reload script** on the glasses. Note the repo is
-public — anything in `speech.txt` is visible to anyone.
+To add or update a speech from anywhere: add/edit a `.txt` file in
+`teleprompter/speeches/` on github.com (or the GitHub mobile app), commit,
+wait ~1 minute for Pages to redeploy, then pick **Reload script** on the
+glasses. Note the repo is public — your speeches are visible to anyone.
 
 ### Local Mac hosting (fast iteration during development)
 

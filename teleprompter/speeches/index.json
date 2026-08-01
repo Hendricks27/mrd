@@ -1,0 +1,5 @@
+---
+layout: null
+permalink: /teleprompter/speeches/index.json
+---
+{% assign files = site.static_files | where_exp: "f", "f.path contains '/teleprompter/speeches/'" | where_exp: "f", "f.extname == '.txt'" %}[{% for f in files %}"{{ f.name }}"{% unless forloop.last %},{% endunless %}{% endfor %}]
