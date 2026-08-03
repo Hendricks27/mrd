@@ -1,7 +1,50 @@
-# 30-second self intro
+# WUEPGG
 
-Hi, I'm Wenjin. I build things at the intersection of software and whatever new hardware just shipped.
+Slide 1 
+Good morning, everyone. I'm Wenjin, a PhD student in Dr. Ting Wang's lab at Washington University in St. Louis.
+Today I want to talk about the WashU Epigenome Browser — but not as a website, as a component instead: something you can drop into your own web application in about two minutes.
 
-Most recently I've been writing apps for smart glasses — including the teleprompter I am literally reading this from right now.
+Slide 2
+Embedding is simple in just two steps.
+Step one: install. It's a published npm package — npm install. No building from source, no server-side setup.
+Step two: import. You bring in the GenomeHub component and its stylesheet, hand it a config that says which genome you want and which tracks to show — and that's your browser. It's a React component.
+There's one requirement: your track files need to be hosted on a public HTTP server, because the browser fetches them client-side. If your data is already on S3 or a lab web server, you're all good.
+And two places to go from here. If you're a human, our documentation has a quick-start page called "Embed the Browser." But if you'd rather have a team of agents write the integration for you, we keep an agent-readable version at github. — point Claude/codex/cursor at that repo and it will set it up for you.
 
-I care about tools that feel invisible: fast to edit, instant to test, and no ceremony between an idea and seeing it work. If that sounds like your kind of thing, come find me afterward — I'd love to compare notes.
+Slide 3
+I will briefly demonstrate a few website that embedded washu epigenome browser. 
+The first case is BICAN, the BRAIN Initiative Cell Atlas Network.
+BICAN has generated a very rich single-cell resource for the basal ganglia, and it's a good stress test for a browser because it's deep in 2 directions at once.
+It's multi-modality. 10x Multiome gives you expression and chromatin accessibility from the same nucleus. Paired-Tag adds three histone modifications — H3K27ac, H3K27me3, and H3K9me3 — alongside expression. And snm3C-seq gives you chromatin conformation and DNA methylation together.
+It's multi-species. The 10x Multiome data spans human, macaque, and marmoset; Paired-Tag covers human and mouse.
+And all of them are in pseudo bulk level, so every one of those assays fans out into dozens of tracks.
+Multiply that out and you get a matrix nobody wants to navigate one by one. That's the problem the portal solves.
+
+
+Slide 4
+Here's partially what we built.
+On the left is the track selection panel. You can filter on all columns. 
+You check the tracks you want, and they load into the browser in the next step.
+The multi-species support is enabled by the Genome Align track, thanks to Daofeng’s introduction to genome align earlier, Genome align is an alignment between 2 genome assemblies, so in this case every species’ track can be displayed in their own genomic coordinates altogether. 
+Here we show the epigenetic signal like ATAC and histone medications as well as expression on gene Foxp2 on all 4 species together. 
+
+
+Slide 5
+Here is another example for gene BCL11b
+BCL11B is one of the regulator of medium spiny neuron identity.
+We show the epigenome, expression and enhancer-promoter interaction difference between Microglia and STR hybrid MSN. The BCL11b is actively transcribed, and the promoter is interacting with many regulatory elements, while microglia is not actively transcribed, and there are less interaction in the promoter region. The example here demonstrates Cell-type-specific chromatin interactions associated with transcriptional differences in neuronal and non-neuronal populations 
+
+
+Slide 6
+Another example I want to make is the IGVF catalog. IGVF is the Impact of Genomic Variation on Function consortium, and the catalog is the resource for connecting a variant to genes, regulatory elements, and traits it affects
+But at some point you want to see the neighborhood — what's around that variant, what else overlaps it. So the browser is embedded right there to help with the visualization. You never leave IGVF; the genomic context comes to you.
+
+Slide 7
+TaRGET II is an NIEHS consortium studying how environmental toxicant exposures affect the epigenome in mice. 
+The portal organizes all datasets by exposure, tissue, and assay, and once again the browser is embedded, so you go from a filtered sample list straight to the signal tracks.
+
+
+Slide 8
+Different consortium, different organism, different biological question, but they can all be visualized using the same browser components. 
+The QR codes will take you to any of them, and there are more in the future.
+
